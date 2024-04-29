@@ -13,14 +13,20 @@ const app = express();
     res.render("index.ejs");
   });
 
-  app.post("/cars", (req, res) => {
+  app.get('/cars', async (req, res) => {
+      const foundCars = await Car.find()
+      res.send(foundCars)
+  })
+
+  app.post("/cars", async (req, res) => {
     console.log(req.body);
     if(req.body.isReadyToDrive === "on"){
         req.body.isReadyToDrive = true
     }else {
-       req.bodyisReadyToDrive = false
+       req.body.isReadyToDrive = false
     }
-      res.send(req.body)
+    const createdCar = await Car.create(req.body);
+      res.redirect('/cars');
   });
 
   app.get("/cars/new" , (req, res) => {
